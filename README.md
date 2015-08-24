@@ -12,22 +12,24 @@ This addon makes CSP-safe styling of your Ember component really easy.
 
 In your component, supply an array of strings called `styleBindings`.
 
-    // app/components/my-component
+```
+// app/components/my-component
 
-		import Ember from 'ember';
-		import CspStyleMixin from 'ember-cli-csp-style/mixins/csp-style';
+import Ember from 'ember';
+import CspStyleMixin from 'ember-cli-csp-style/mixins/csp-style';
 
-		export default Ember.Component.extend(CspStyleMixin, {
+export default Ember.Component.extend(CspStyleMixin, {
 
-			classNames: ['component'],
-			styleBindings: ['width[px]'],
+	classNames: ['component'],
+	styleBindings: ['width[px]'],
 
-			width: 100,
-			
-			click: function() {
-				this.set('width', 200);
-			}
-		});
+	width: 100,
+	
+	click: function() {
+		this.set('width', 200);
+	}
+});
+```
 
 ## Binding format
 
