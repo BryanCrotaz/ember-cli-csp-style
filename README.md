@@ -1,17 +1,53 @@
-# Ember-cli-csp-styling
+# Ember-cli-csp-style
 
-This README outlines the details of collaborating on this Ember addon.
+This addon makes CSP-safe styling of your Ember component really easy.
+
+[![Build Status](https://travis-ci.org/BryanCrotaz/ember-cli-csp-style.svg?branch=master)](https://travis-ci.org/BryanCrotaz/ember-cli-csp-style)
 
 ## Installation
 
-* `git clone` this repository
-* `npm install`
-* `bower install`
+* `npm install --save ember-cli-csp-style`
 
-## Running
+## Usage
 
-* `ember server`
-* Visit your app at http://localhost:4200.
+In your component, supply an array of strings called `styleBindings`.
+
+    // app/components/my-component
+
+		import Ember from 'ember';
+		import CspStyleMixin from 'ember-cli-csp-style/mixins/csp-style';
+
+		export default Ember.Component.extend(CspStyleMixin, {
+
+			classNames: ['component'],
+			styleBindings: ['width[px]'],
+
+			width: 100,
+			
+			click: function() {
+				this.set('width', 200);
+			}
+		});
+
+## Binding format
+
+> Format borrowed from `with-style-mixin`
+
+### Simple binding
+`['color']` binds the css value `color` to the `color` property on your component
+
+### Binding with units
+Only works with numeric values
+`['width[px]']` binds the css value `width` to the `width` property on your component, adding 'px' on the end if the value is numeric
+`['width[%]']` binds the css value `width` to the `width` property on your component, adding '%' on the end if the value is numeric
+`['internalWidth:width[%]']` binds the css value `width` to the `internalWidth` property on your component, adding '%' on the end if the value is numeric
+
+### Escaping
+If the bound value is a string, it will be escaped for safety. If your property returns a `SafeString` then it will not be escaped.
+
+### Switch values
+`['show:display?block:none']` binds to the show property. If it returns a truthy value, the style is set to `display:block`, otherwise it's set to `display:none`.
+
 
 ## Running Tests
 
@@ -23,3 +59,11 @@ This README outlines the details of collaborating on this Ember addon.
 * `ember build`
 
 For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
+
+## Authors
+
+- [Bryan Crotaz](https://twitter.com/bryancrotaz)
+
+## Legal
+
+[Licensed under the MIT license](http://www.opensource.org/licenses/mit-license.php)
