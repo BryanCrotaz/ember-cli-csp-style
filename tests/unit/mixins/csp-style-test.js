@@ -1,12 +1,55 @@
-import Ember from 'ember';
-import CspStyleMixin from '../../../mixins/csp-style';
-import { module, test } from 'qunit';
+import hbs from 'htmlbars-inline-precompile';
+import { moduleForComponent, test } from 'ember-qunit';
 
-module('Unit | Mixin | csp style');
+moduleForComponent('csp-style', 'Integration | Mixin | csp-style', {
+  integration: true,
+});
 
-// Replace this with your real tests.
-test('it works', function(assert) {
-  var CspStyleObject = Ember.Object.extend(CspStyleMixin);
-  var subject = CspStyleObject.create();
-  assert.ok(subject);
+test('renders with no styles', function(assert) {
+  this.render(hbs`{{no-style-component}}`);
+  
+  var element = this.$('.component');
+  assert.ok(element.length > 0);
+  assert.equal(element[0].attributes.style, null);
+});
+
+test('renders with string style', function(assert) {
+  this.render(hbs`{{string-style-component}}`);
+  
+  var element = this.$('.component');
+  assert.ok(element.length > 0);
+  assert.equal(element[0].attributes.style.value, 'color: red;');
+});
+
+test('updates style after property change', function(assert) {
+  this.render(hbs`{{string-style-component}}`);
+  
+  var element = this.$('.component');
+  assert.ok(element.length > 0);
+  assert.equal(element[0].attributes.style.value, 'color: red;');
+
+  element.click();
+  assert.equal(element[0].attributes.style.value, 'color: blue;');
+});
+
+test('style with units', function(assert) {
+  this.render(hbs`{{pixels-style-component}}`);
+  
+  var element = this.$('.component');
+  assert.ok(element.length > 0);
+  assert.equal(element[0].attributes.style.value, 'width: 100px;');
+
+  element.click();
+  assert.equal(element[0].attributes.style.value, 'width: 200px;');
+});
+
+test('updates style after styleBindings change', function(assert) {
+  this.render(hbs`{{stylebindings-change-component}}`);
+  
+  var element = this.$('.component');
+  assert.ok(element.length > 0);
+  assert.equal(element[0].attributes.style.value, 'color: red;');
+
+  element.click();
+  assert.equal(element[0].attributes.style.value, 'min-width: 100px;');
 });

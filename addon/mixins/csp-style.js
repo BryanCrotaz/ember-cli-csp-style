@@ -14,16 +14,21 @@ var StyleObserver = Ember.Object.extend({
 	}),
 
 	_teardown: Ember.on('willDestroy', function() {
-  	this._stopObserving();
-  	this._removeStyle();
+  	this.stop();
 	}),
 
 	_startObserving: function() {
 		this.get('target').addObserver(this.get('property'), this, '_propertyDidChange');
 	},
 
-	_stopObserving: function() {
-		this.get('target').removeObserver(this.get('property'), this, '_propertyDidChange');
+	stop: function() {
+		var target = this.get('target');
+		if (target)
+		{
+			target.removeObserver(this.get('property'), this, '_propertyDidChange');
+	  	this._removeStyle();
+			this.set('target', null);
+		}
 	},
 
 	_propertyDidChange: function (/*target, property*/) {
@@ -81,7 +86,7 @@ var YesNoStyleObserver = Ember.Object.extend({
 
 export default Ember.Mixin.create({
 	
-	_styleObservers: [],
+	_styleObservers: null,
 
 	_regex: /^(([^\?:]+):)?([a-z0-9_\.-]+)(\[([a-z%]+)\])?(\?([a-z0-9_\.\-]*):([a-z0-9_\.\-]*))?$/i,
 
@@ -94,38 +99,68 @@ export default Ember.Mixin.create({
 	}),
 
 	_refreshBindings: function() {
-		var styleBindings = this.get('styleBindings');
-		if (!styleBindings) { 
-			styleBindings = []; 
-		}
-		var observers = [];
+
+		var hashCode = function(s){
+		  return s.split("").reduce(function(a,b){
+		  	a=((a<<5)-a)+b.charCodeAt(0);
+		  	return a&a;
+		  },0);              
+		};
+
+		var styleBindings = this.get('styleBindings') || [];
+
+		var observers = this.get('_styleObservers') || {};
+		var foundBindings = {};
+
+		// iterate the style bindings
 		for (var i=0; i< styleBindings.length; i++) {
 			var binding = styleBindings[i];
 
-			var match = binding.match(this.get('_regex'));
-			if (match) {
-	      var cssProp = match[3];
-	      var emberProp = match[2] || Ember.String.camelize(cssProp);
-	      var unit = match[5];
-	      var type = StyleObserver;
-	      var properties = {
-					target: this,
-					property: emberProp,
-					cssName: cssProp,
-					unit: unit
-				};
-	      if (match[6]) {
-	      	type = YesNoStyleObserver;
-	        properties.yesNo = {
-	        	yes: match[7],
-	        	no: match[8]
-	        };
-	      }
-	      var observer = type.create(properties);
-				observers.push(observer);
-	    }
+			var hash = hashCode(binding);
+			// add the observer if it's not there already
+			if (!observers[hash])
+			{
+				observers[hash] = this._createObserver(binding);
+			}
+			foundBindings[hash] = true;
 		}
+
+		// look for removed bindings
+		for(var property in observers) {
+			if (observers.hasOwnProperty(property)) {
+				if (!foundBindings[property])
+				{
+					observers[property].stop();
+					delete observers[property];
+				}
+			}
+		}
+
 		this.set('_styleObservers', observers);
+	},
+
+	_createObserver: function(binding) {
+		var match = binding.match(this.get('_regex'));
+		if (match) {
+      var cssProp = match[3];
+      var emberProp = match[2] || Ember.String.camelize(cssProp);
+      var unit = match[5];
+      var type = StyleObserver;
+      var properties = {
+				target: this,
+				property: emberProp,
+				cssName: cssProp,
+				unit: unit
+			};
+      if (match[6]) {
+      	type = YesNoStyleObserver;
+        properties.yesNo = {
+        	yes: match[7],
+        	no: match[8]
+        };
+      }
+      return type.create(properties);
+    }
 	}
 
 });
