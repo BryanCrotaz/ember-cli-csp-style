@@ -2,5 +2,5 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-csp-styling'
+  name: 'ember-cli-csp-style'
 };
