@@ -1,5 +1,7 @@
 # Ember-cli-csp-style
 
+It is very important when creating a component as an addon to make sure that you do **not** require [CSP](https://en.wikipedia.org/wiki/Content_Security_Policy) to include `unsafe-inline`. If you do then the entire app that your component is used within will have no protection against style injection attacks.
+
 This addon makes CSP-safe styling of your Ember component really easy.
 
 [![Build Status](https://travis-ci.org/BryanCrotaz/ember-cli-csp-style.svg?branch=master)](https://travis-ci.org/BryanCrotaz/ember-cli-csp-style)
