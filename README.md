@@ -53,7 +53,7 @@ If the bound value is a string, it will be escaped for safety. If your property 
 
 ### Switch values
 
-`styleBindings: ['show:display?block:none']` binds to the show property. If it returns a truthy value, the style is set to `display:block`, otherwise it's set to `display:none`.
+`styleBindings: ['show:display?block:none']` binds to the `show` property. If it returns a truthy value, the style is set to `display:block`, otherwise it's set to `display:none`.
 
 
 ## Running Tests
