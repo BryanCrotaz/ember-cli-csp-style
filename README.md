@@ -55,6 +55,12 @@ If the bound value is a string, it will be escaped for safety. If your property 
 
 `styleBindings: ['show:display?block:none']` binds to the `show` property. If it returns a truthy value, the style is set to `display:block`, otherwise it's set to `display:none`.
 
+## Advanced
+
+You can provide the `styleBindings` array as a `computed` property to change which styles are bound at run time.
+
+If a bound property returns `null` then the style will be removed from the HTML.
+
 
 ## Running Tests
 
