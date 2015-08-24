@@ -86,6 +86,7 @@ var YesNoStyleObserver = Ember.Object.extend({
 
 export default Ember.Mixin.create({
 	
+	concatenatedProperties: ['styleBindings'],
 	_styleObservers: null,
 
 	_regex: /^(([^\?:]+):)?([a-z0-9_\.-]+)(\[([a-z%]+)\])?(\?([a-z0-9_\.\-]*):([a-z0-9_\.\-]*))?$/i,
