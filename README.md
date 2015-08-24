@@ -35,16 +35,17 @@ In your component, supply an array of strings called `styleBindings`.
 
 ### Simple binding
 
-`['color']` binds the css value `color` to the `color` property on your component
+`styleBindings: ['color']` binds the css value `color` to the `color` property on your component
+`styleBindings: ['foreground:color']` binds the css value `color` to the `foreground` property on your component
 
 ### Binding with units
 Only works with numeric values
 
-`['width[px]']` binds the css value `width` to the `width` property on your component, adding 'px' on the end if the value is numeric
+`styleBindings: ['width[px]']` binds the css value `width` to the `width` property on your component, adding `'px'` on the end if the value is numeric
 
-`['width[%]']` binds the css value `width` to the `width` property on your component, adding '%' on the end if the value is numeric
+`styleBindings: ['width[%]']` binds the css value `width` to the `width` property on your component, adding `'%'` on the end if the value is numeric
 
-`['internalWidth:width[%]']` binds the css value `width` to the `internalWidth` property on your component, adding '%' on the end if the value is numeric
+`styleBindings: ['internalWidth:width[%]']` binds the css value `width` to the `internalWidth` property on your component, adding `'%'` on the end if the value is numeric
 
 ### Escaping
 
@@ -52,7 +53,7 @@ If the bound value is a string, it will be escaped for safety. If your property 
 
 ### Switch values
 
-`['show:display?block:none']` binds to the show property. If it returns a truthy value, the style is set to `display:block`, otherwise it's set to `display:none`.
+`styleBindings: ['show:display?block:none']` binds to the show property. If it returns a truthy value, the style is set to `display:block`, otherwise it's set to `display:none`.
 
 
 ## Running Tests
