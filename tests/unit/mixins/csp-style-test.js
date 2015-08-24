@@ -18,7 +18,7 @@ test('renders with string style', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value, 'color: red;');
+  assert.equal(element[0].attributes.style.value.trim(), 'color: red;');
 });
 
 test('updates style after property change', function(assert) {
@@ -26,10 +26,10 @@ test('updates style after property change', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value, 'color: red;');
+  assert.equal(element[0].attributes.style.value.trim(), 'color: red;');
 
   element.click();
-  assert.equal(element[0].attributes.style.value, 'color: blue;');
+  assert.equal(element[0].attributes.style.value.trim(), 'color: blue;');
 });
 
 test('style with units', function(assert) {
@@ -37,10 +37,10 @@ test('style with units', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value, 'width: 100px;');
+  assert.equal(element[0].attributes.style.value.trim(), 'width: 100px;');
 
   element.click();
-  assert.equal(element[0].attributes.style.value, 'width: 200px;');
+  assert.equal(element[0].attributes.style.value.trim(), 'width: 200px;');
 });
 
 test('updates style after styleBindings change', function(assert) {
@@ -48,8 +48,8 @@ test('updates style after styleBindings change', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value, 'color: red;');
+  assert.equal(element[0].attributes.style.value.trim(), 'color: red;');
 
   element.click();
-  assert.equal(element[0].attributes.style.value, 'min-width: 100px;');
+  assert.equal(element[0].attributes.style.value.trim(), 'min-width: 100px;');
 });
