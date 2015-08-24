@@ -5,6 +5,10 @@ moduleForComponent('csp-style', 'Integration | Mixin | csp-style', {
   integration: true,
 });
 
+var getStyle = function(element) {
+	return element[0].attributes.style.value.trim();
+};
+
 test('renders with no styles', function(assert) {
   this.render(hbs`{{no-style-component}}`);
   
@@ -18,7 +22,7 @@ test('renders with string style', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value.trim(), 'color: red;');
+  assert.equal(getStyle(element), 'color: red;');
 });
 
 test('updates style after property change', function(assert) {
@@ -26,10 +30,10 @@ test('updates style after property change', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value.trim(), 'color: red;');
+  assert.equal(getStyle(element), 'color: red;');
 
   element.click();
-  assert.equal(element[0].attributes.style.value.trim(), 'color: blue;');
+  assert.equal(getStyle(element), 'color: blue;');
 });
 
 test('style with units', function(assert) {
@@ -37,10 +41,10 @@ test('style with units', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value.trim(), 'width: 100px;');
+  assert.equal(getStyle(element), 'width: 100px;');
 
   element.click();
-  assert.equal(element[0].attributes.style.value.trim(), 'width: 200px;');
+  assert.equal(getStyle(element), 'width: 200px;');
 });
 
 test('updates style after styleBindings change', function(assert) {
@@ -48,8 +52,8 @@ test('updates style after styleBindings change', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style.value.trim(), 'color: red;');
+  assert.equal(getStyle(element), 'color: red;');
 
   element.click();
-  assert.equal(element[0].attributes.style.value.trim(), 'min-width: 100px;');
+  assert.equal(getStyle(element), 'min-width: 100px;');
 });
