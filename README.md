@@ -39,17 +39,17 @@ export default Ember.Component.extend(CspStyleMixin, {
 
 ### Simple binding
 
-`styleBindings: ['color']` binds the css value `color` to the `color` property on your component
-`styleBindings: ['foreground:color']` binds the css value `color` to the `foreground` property on your component
+`styleBindings: ['color']` binds the inline style value `color` to the `color` property on your component
+`styleBindings: ['foreground:color']` binds the inline style value `color` to the `foreground` property on your component
 
 ### Binding with units
 Only works with numeric values
 
-`styleBindings: ['width[px]']` binds the css value `width` to the `width` property on your component, adding `'px'` on the end if the value is numeric
+`styleBindings: ['width[px]']` binds the inline style value `width` to the `width` property on your component, adding `'px'` on the end if the value is numeric
 
-`styleBindings: ['width[%]']` binds the css value `width` to the `width` property on your component, adding `'%'` on the end if the value is numeric
+`styleBindings: ['width[%]']` binds the inline style value `width` to the `width` property on your component, adding `'%'` on the end if the value is numeric
 
-`styleBindings: ['internalWidth:width[%]']` binds the css value `width` to the `internalWidth` property on your component, adding `'%'` on the end if the value is numeric
+`styleBindings: ['internalWidth:width[%]']` binds the inline style value `width` to the `internalWidth` property on your component, adding `'%'` on the end if the value is numeric
 
 ### Escaping
 
