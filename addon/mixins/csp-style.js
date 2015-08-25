@@ -99,6 +99,18 @@ export default Ember.Mixin.create({
 		this._refreshBindings();
 	}),
 
+	doCleanup: Ember.on('willDestroyElement', function() {
+		var observers = this.get('_styleObservers') || {};
+		// remove all bindings
+		for(var property in observers) {
+			if (observers.hasOwnProperty(property)) {
+				observers[property].stop();
+				delete observers[property];
+			}
+		}
+		this.set('_styleObservers', {});
+	}),
+
 	_refreshBindings: function() {
 
 		var hashCode = function(s){
