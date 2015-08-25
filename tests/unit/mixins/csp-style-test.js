@@ -6,7 +6,11 @@ moduleForComponent('csp-style', 'Integration | Mixin | csp-style', {
 });
 
 var getStyle = function(element) {
-	return element[0].attributes.style.value.trim();
+	var style = element[0].attributes.style;
+	if (!style) {
+		return null;
+	}
+	return style.value.trim();
 };
 
 test('renders with no styles', function(assert) {
@@ -45,6 +49,17 @@ test('style with units', function(assert) {
 
   element.click();
   assert.equal(getStyle(element), 'width: 200px;');
+});
+
+test('style with yes no', function(assert) {
+  this.render(hbs`{{yesno-style-component}}`);
+  
+  var element = this.$('.component');
+  assert.ok(element.length > 0);
+  assert.equal(getStyle(element), 'width: 200px;');
+
+  element.click();
+  assert.equal(getStyle(element), 'width: 100px;');
 });
 
 test('updates style after styleBindings change', function(assert) {

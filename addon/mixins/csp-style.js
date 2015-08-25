@@ -70,7 +70,7 @@ var StyleObserver = Ember.Object.extend({
 	}
 });
 
-var YesNoStyleObserver = Ember.Object.extend({
+var YesNoStyleObserver = StyleObserver.extend({
 	yesNo: null,
 
 	_getValue: function() {
