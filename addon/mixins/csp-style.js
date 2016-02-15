@@ -48,6 +48,10 @@ var StyleObserver = Ember.Object.extend({
 		if (!(value instanceof Ember.Handlebars.SafeString)) {
 			value = Ember.Handlebars.Utils.escapeExpression(value);
 		}
+		// ie9 gets upset if value is 'NaN'
+		if (value === 'NaN') {
+			value = '';
+		}
 		// set the property
 		if (value != null)
 		{
