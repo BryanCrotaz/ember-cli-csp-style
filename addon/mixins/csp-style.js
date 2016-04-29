@@ -5,16 +5,18 @@ var StyleObserver = Ember.Object.extend({
 	property: null,
 	cssName: null,
 	unit: null,
-	_cssStyle: null,
+	styleChunk: null,
+
+//	_cssStyle: null,
 
 	_setup: Ember.on('init', function() {
-		this.set('_cssStyle', this.get('target.element').style);
-  	this._startObserving();
-  	this._setStyle();
+//		this.set('_cssStyle', this.$().style);
+		this._startObserving();
+		this._setStyle();
 	}),
 
 	_teardown: Ember.on('willDestroy', function() {
-  	this.stop();
+		this.stop();
 	}),
 
 	_startObserving: function() {
@@ -26,7 +28,7 @@ var StyleObserver = Ember.Object.extend({
 		if (target)
 		{
 			target.removeObserver(this.get('property'), this, '_propertyDidChange');
-	  	this._removeStyle();
+			this._removeStyle();
 			this.set('target', null);
 		}
 	},
@@ -39,13 +41,16 @@ var StyleObserver = Ember.Object.extend({
 		var name = this.get('cssName');
 		var unit = this.get('unit');
 		var value = this._getValue();
-		var cssStyle = this.get('_cssStyle');
 		// add units to numeric value
-		if (!isNaN(parseFloat(value)) && isFinite(value)) {
+		if (!isNaN(parseFloat(value)) && isFinite(value) && unit) {
 			value = value + unit;
 		}
 		// escape if necessary
-		if (!(value instanceof Ember.Handlebars.SafeString)) {
+		if (value instanceof Ember.Handlebars.SafeString) {
+			value = value.toString();
+		}
+		else
+		{
 			value = Ember.Handlebars.Utils.escapeExpression(value);
 		}
 		// ie9 gets upset if value is 'NaN'
@@ -53,13 +58,8 @@ var StyleObserver = Ember.Object.extend({
 			value = '';
 		}
 		// set the property
-		if (value != null)
-		{
-			cssStyle.setProperty(name, value);
-		}
-		else {
-			cssStyle.removeProperty(name, value);
-		}
+		this.set('styleChunk', `${name}:${value};`);
+		this.get('target')._refreshStyle();
 	},
 
 	_getValue: function() {
@@ -68,9 +68,7 @@ var StyleObserver = Ember.Object.extend({
 	},
 
 	_removeStyle: function() {
-		var name = this.get('cssName');
-		var cssStyle = this.get('_cssStyle');
-		cssStyle.removeProperty(name);
+		this.set('styleChunk', null);
 	}
 });
 
@@ -91,11 +89,14 @@ var YesNoStyleObserver = StyleObserver.extend({
 export default Ember.Mixin.create({
 	
 	concatenatedProperties: ['styleBindings'],
+	attributeBindings: ['style'],
+	style: Ember.String.htmlSafe(''),
+
 	_styleObservers: null,
 
 	_regex: /^(([^\?:]+):)?([a-z0-9_\.-]+)(\[([a-z%]+)\])?(\?([a-z0-9_\.\-]*):([a-z0-9_\.\-]*))?$/i,
 
-	doInit: Ember.on('willInsertElement', function() {
+	doInit: Ember.on('willRender', function() {
 		this._refreshBindings();
 	}),
 
@@ -104,7 +105,7 @@ export default Ember.Mixin.create({
 	}),
 
 	doCleanup: Ember.on('willDestroyElement', function() {
-		var observers = this.get('_styleObservers') || {};
+		var observers = Ember.get(this, '_styleObservers') || {};
 		// remove all bindings
 		for(var property in observers) {
 			if (observers.hasOwnProperty(property)) {
@@ -112,15 +113,25 @@ export default Ember.Mixin.create({
 				delete observers[property];
 			}
 		}
-		this.set('_styleObservers', {});
+		Ember.set(this, '_styleObservers', {});
 	}),
+
+	_refreshStyle() {
+		var style = "";
+		var observers = Ember.get(this, '_styleObservers');
+		for (var key in observers)
+		{
+			style += Ember.get(observers[key], 'styleChunk');
+		}
+		Ember.set(this, 'style', Ember.String.htmlSafe(style));
+	},
 
 	_refreshBindings: function() {
 
 		var hashCode = function(s){
 		  return s.split("").reduce(function(a,b){
-		  	a=((a<<5)-a)+b.charCodeAt(0);
-		  	return a&a;
+			a=((a<<5)-a)+b.charCodeAt(0);
+			return a&a;
 		  },0);              
 		};
 
@@ -154,30 +165,31 @@ export default Ember.Mixin.create({
 		}
 
 		this.set('_styleObservers', observers);
+		this._refreshStyle();
 	},
 
 	_createObserver: function(binding) {
 		var match = binding.match(this.get('_regex'));
 		if (match) {
-      var cssProp = match[3];
-      var emberProp = match[2] || Ember.String.camelize(cssProp);
-      var unit = match[5];
-      var type = StyleObserver;
-      var properties = {
+			var cssProp = match[3];
+			var emberProp = match[2] || Ember.String.camelize(cssProp);
+			var unit = match[5];
+			var type = StyleObserver;
+			var properties = {
 				target: this,
 				property: emberProp,
 				cssName: cssProp,
 				unit: unit
 			};
-      if (match[6]) {
-      	type = YesNoStyleObserver;
-        properties.yesNo = {
-        	yes: match[7],
-        	no: match[8]
-        };
-      }
-      return type.create(properties);
-    }
+			if (match[6]) {
+				type = YesNoStyleObserver;
+				properties.yesNo = {
+					yes: match[7],
+					no: match[8]
+				};
+			}
+			return type.create(properties);
+		}
 	}
 
 });
