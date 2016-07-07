@@ -8,6 +8,8 @@ export default Ember.Mixin.create({
 
 	_styleObservers: null,
 
+	_calculatedStyle: null,
+
 	_regex: /^(([^\?:]+):)?([a-z0-9_\.-]+)(\[([a-z%]+)\])?(\?([a-z0-9_\.\-]*):([a-z0-9_\.\-]*))?$/i,
 
 	doInit: Ember.on('didInsertElement', function() {
@@ -30,13 +32,13 @@ export default Ember.Mixin.create({
 		Ember.set(this, '_styleObservers', {});
 	}),
 
-	_writeStyle(newStyle) {
+	_writeStyle: Ember.observer('_calculatedStyle', function() {
 		let elements = this.$();
 		if (elements && elements.length > 0)
 		{
-			elements[0].style = newStyle;
+			elements[0].style = Ember.get(this, '_calculatedStyle');
 		}
-	},
+	}),
 
 	_refreshStyle() {
 		var style = "";
@@ -54,7 +56,7 @@ export default Ember.Mixin.create({
 				style += Ember.get(observers[key], 'styleChunk');
 			}
 		}
-		this._writeStyle(Ember.String.htmlSafe(style));
+		Ember.set(this, '_calculatedStyle', style);
 	},
 
 	_refreshBindings: function() {
