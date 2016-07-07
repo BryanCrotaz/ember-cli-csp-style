@@ -65,6 +65,16 @@ You can provide the `styleBindings` array as a `computed` property to change whi
 
 If a bound property returns `null` then the style will be removed from the HTML.
 
+## Binding style directly
+
+If you bind directly to style:
+
+```
+styleBindings: ['style', 'width', 'display'],
+style: Ember.computed('myData', function() {...}) 
+'''
+this will only output your calculated `style` and will ignore all other bindings (in this case `width` and `height`).
+
 
 ## Running Tests
 

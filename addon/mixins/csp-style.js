@@ -1,96 +1,12 @@
 import Ember from 'ember';
-
-var StyleObserver = Ember.Object.extend({
-	target: null,
-	property: null,
-	cssName: null,
-	unit: null,
-	styleChunk: null,
-
-//	_cssStyle: null,
-
-	_setup: Ember.on('init', function() {
-//		this.set('_cssStyle', this.$().style);
-		this._startObserving();
-		this._setStyle();
-	}),
-
-	_teardown: Ember.on('willDestroy', function() {
-		this.stop();
-	}),
-
-	_startObserving: function() {
-		this.get('target').addObserver(this.get('property'), this, '_propertyDidChange');
-	},
-
-	stop: function() {
-		var target = this.get('target');
-		if (target)
-		{
-			target.removeObserver(this.get('property'), this, '_propertyDidChange');
-			this._removeStyle();
-			this.set('target', null);
-		}
-	},
-
-	_propertyDidChange: function (/*target, property*/) {
-		this._setStyle();
-	},
-
-	_setStyle: function() {
-		var name = this.get('cssName');
-		var unit = this.get('unit');
-		var value = this._getValue();
-		// add units to numeric value
-		if (!isNaN(parseFloat(value)) && isFinite(value) && unit) {
-			value = value + unit;
-		}
-		// escape if necessary
-		if (value instanceof Ember.Handlebars.SafeString) {
-			value = value.toString();
-		}
-		else
-		{
-			value = Ember.Handlebars.Utils.escapeExpression(value);
-		}
-		// ie9 gets upset if value is 'NaN'
-		if (value === 'NaN') {
-			value = '';
-		}
-		// set the property
-		this.set('styleChunk', `${name}:${value};`);
-		this.get('target')._refreshStyle();
-	},
-
-	_getValue: function() {
-		var property = this.get('property');
-		return this.get('target.'+property);
-	},
-
-	_removeStyle: function() {
-		this.set('styleChunk', null);
-	}
-});
-
-var YesNoStyleObserver = StyleObserver.extend({
-	yesNo: null,
-
-	_getValue: function() {
-		var value = this._super();
-		var yesNo = this.get('yesNo');
-		if (yesNo)
-		{
-			value = value ? yesNo.yes : yesNo.no;
-		}
-		return value;
-	}
-});
+import StyleObserver from './observers/style';
+import YesNoStyleObserver from './observers/yesno';
 
 export default Ember.Mixin.create({
 	
 	concatenatedProperties: ['styleBindings'],
-	attributeBindings: ['style'],
-	style: Ember.String.htmlSafe(''),
+	attributeBindings: ['_calculatedStyle:style'],
+	_calculatedStyle: Ember.String.htmlSafe(''),
 
 	_styleObservers: null,
 
@@ -121,19 +37,21 @@ export default Ember.Mixin.create({
 		var observers = Ember.get(this, '_styleObservers');
 		for (var key in observers)
 		{
-			style += Ember.get(observers[key], 'styleChunk');
+			if (key === "style" || key.indexOf(":style") === key.length-6 || key.indexOf(":style?") > -1) {
+				style = Ember.get(observers[key], 'styleChunk');
+				// trim off prefix and suffix
+				style = style.substring(6, style.length-1);
+				break;
+			}
+			else
+			{
+				style += Ember.get(observers[key], 'styleChunk');
+			}
 		}
-		Ember.set(this, 'style', Ember.String.htmlSafe(style));
+		Ember.set(this, '_calculatedStyle', Ember.String.htmlSafe(style));
 	},
 
 	_refreshBindings: function() {
-
-		var hashCode = function(s){
-		  return s.split("").reduce(function(a,b){
-			a=((a<<5)-a)+b.charCodeAt(0);
-			return a&a;
-		  },0);              
-		};
 
 		var styleBindings = this.get('styleBindings') || [];
 
@@ -144,13 +62,12 @@ export default Ember.Mixin.create({
 		for (var i=0; i< styleBindings.length; i++) {
 			var binding = styleBindings[i];
 
-			var hash = hashCode(binding);
 			// add the observer if it's not there already
-			if (!observers[hash])
+			if (!observers[binding])
 			{
-				observers[hash] = this._createObserver(binding);
+				observers[binding] = this._createObserver(binding);
 			}
-			foundBindings[hash] = true;
+			foundBindings[binding] = true;
 		}
 
 		// look for removed bindings
