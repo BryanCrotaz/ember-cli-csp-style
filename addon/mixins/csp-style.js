@@ -36,7 +36,14 @@ export default Ember.Mixin.create({
 		let elements = this.$();
 		if (elements && elements.length > 0)
 		{
-			elements[0].style = Ember.get(this, '_calculatedStyle');
+			try
+			{
+				elements[0].style = Ember.get(this, '_calculatedStyle');
+			}
+			catch(err)
+			{
+				elements.attr('style', Ember.get(this, '_calculatedStyle'));
+			}
 		}
 	}),
 

@@ -8,12 +8,12 @@ moduleForComponent('csp-style', 'Integration | Mixin | csp-style', {
 var getStyle = function(element) {
 	var style = element[0].attributes.style;
 	if (!style) {
-		return null;
+		return "";
 	}
   let result = style.value;
   if ((result !== undefined) && result.trim)
   {
-    result = result.trim();
+    result = result.trim().replace(': ', ':');
   } 
 	return result;
 };
@@ -23,7 +23,7 @@ test('renders with no styles', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(getStyle(element), null);
+  assert.equal(getStyle(element), "");
 });
 
 test('renders with string style', function(assert) {
@@ -31,7 +31,7 @@ test('renders with string style', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(getStyle(element), 'color: red;');
+  assert.equal(getStyle(element), 'color:red;');
 });
 
 test('updates style after property change', function(assert) {
@@ -39,10 +39,10 @@ test('updates style after property change', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(getStyle(element), 'color: red;');
+  assert.equal(getStyle(element), 'color:red;');
 
   element.click();
-  assert.equal(getStyle(element), 'color: blue;');
+  assert.equal(getStyle(element), 'color:blue;');
 });
 
 test('style with units', function(assert) {
@@ -50,10 +50,10 @@ test('style with units', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(getStyle(element), 'width: 100px;');
+  assert.equal(getStyle(element), 'width:100px;');
 
   element.click();
-  assert.equal(getStyle(element), 'width: 200px;');
+  assert.equal(getStyle(element), 'width:200px;');
 });
 
 test('style with yes no', function(assert) {
@@ -61,10 +61,10 @@ test('style with yes no', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(getStyle(element), 'width: 200px;');
+  assert.equal(getStyle(element), 'width:200px;');
 
   element.click();
-  assert.equal(getStyle(element), 'width: 100px;');
+  assert.equal(getStyle(element), 'width:100px;');
 });
 
 test('updates style after styleBindings change', function(assert) {
@@ -72,8 +72,9 @@ test('updates style after styleBindings change', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(getStyle(element), 'color: red;');
+  assert.equal(getStyle(element), 'color:red;');
 
   element.click();
-  assert.equal(getStyle(element), 'min-width: 100px;');
+  assert.equal(getStyle(element), 'min-width:100px;');
 });
+
