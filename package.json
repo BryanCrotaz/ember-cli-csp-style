@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-csp-style",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "",
   "directories": {
     "doc": "doc",
@@ -22,6 +22,7 @@
     "ember-ajax": "0.7.1",
     "ember-cli": "2.4.2",
     "ember-cli-app-version": "^1.0.0",
+    "ember-cli-content-security-policy": "0.5.0",
     "ember-cli-dependency-checker": "^1.2.0",
     "ember-cli-htmlbars": "^1.0.1",
     "ember-cli-htmlbars-inline-precompile": "^0.3.1",

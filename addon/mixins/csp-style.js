@@ -5,14 +5,12 @@ import YesNoStyleObserver from './observers/yesno';
 export default Ember.Mixin.create({
 	
 	concatenatedProperties: ['styleBindings'],
-	attributeBindings: ['_calculatedStyle:style'],
-	_calculatedStyle: Ember.String.htmlSafe(''),
 
 	_styleObservers: null,
 
 	_regex: /^(([^\?:]+):)?([a-z0-9_\.-]+)(\[([a-z%]+)\])?(\?([a-z0-9_\.\-]*):([a-z0-9_\.\-]*))?$/i,
 
-	doInit: Ember.on('willRender', function() {
+	doInit: Ember.on('didInsertElement', function() {
 		this._refreshBindings();
 	}),
 
@@ -32,6 +30,14 @@ export default Ember.Mixin.create({
 		Ember.set(this, '_styleObservers', {});
 	}),
 
+	_writeStyle(newStyle) {
+		let elements = this.$();
+		if (elements && elements.length > 0)
+		{
+			elements[0].style = newStyle;
+		}
+	},
+
 	_refreshStyle() {
 		var style = "";
 		var observers = Ember.get(this, '_styleObservers');
@@ -48,7 +54,7 @@ export default Ember.Mixin.create({
 				style += Ember.get(observers[key], 'styleChunk');
 			}
 		}
-		Ember.set(this, '_calculatedStyle', Ember.String.htmlSafe(style));
+		this._writeStyle(Ember.String.htmlSafe(style));
 	},
 
 	_refreshBindings: function() {
