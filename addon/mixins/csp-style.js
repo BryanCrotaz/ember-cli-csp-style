@@ -43,7 +43,7 @@ export default Ember.Mixin.create({
 		var observers = Ember.get(this, '_styleObservers');
 		for (var key in observers)
 		{
-			if (key === "style" || key.indexOf(":style") === key.length-6 || key.indexOf(":style?") > -1) {
+			if (key === "style" || key.indexOf(":style?") > -1 || (key.indexOf(":style") > -1 && key.indexOf(":style") === key.length-6)) {
 				style = Ember.get(observers[key], 'styleChunk');
 				// trim off prefix and suffix
 				style = style.substring(6, style.length-1);

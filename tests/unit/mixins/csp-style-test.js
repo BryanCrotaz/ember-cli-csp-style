@@ -10,7 +10,12 @@ var getStyle = function(element) {
 	if (!style) {
 		return null;
 	}
-	return style.value.trim();
+  let result = style.value;
+  if ((result !== undefined) && result.trim)
+  {
+    result = result.trim();
+  } 
+	return result;
 };
 
 test('renders with no styles', function(assert) {
@@ -18,7 +23,7 @@ test('renders with no styles', function(assert) {
   
   var element = this.$('.component');
   assert.ok(element.length > 0);
-  assert.equal(element[0].attributes.style, null);
+  assert.equal(getStyle(element), null);
 });
 
 test('renders with string style', function(assert) {
