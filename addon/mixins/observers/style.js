@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import isHTMLSafe from 'ember-string-ishtmlsafe-polyfill';
 
 export default Ember.Object.extend({
 	target: null,
@@ -44,7 +43,7 @@ export default Ember.Object.extend({
 			value = value + unit;
 		}
 		// escape if necessary
-		if (isHTMLSafe(value)) {
+		if (Ember.String.isHTMLSafe(value)) {
 			value = value.toString();
 		}
 		else
