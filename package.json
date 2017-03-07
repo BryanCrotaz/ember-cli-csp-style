@@ -13,7 +13,7 @@
   },
   "repository": "https://github.com/BryanCrotaz/ember-cli-csp-style",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 4.3"
   },
   "author": "Bryan Crotaz",
   "license": "MIT",
