@@ -3,7 +3,7 @@ import StyleObserver from './observers/style';
 import YesNoStyleObserver from './observers/yesno';
 
 export default Ember.Mixin.create({
-	
+
 	concatenatedProperties: ['styleBindings'],
 
 	_styleObservers: null,
@@ -38,7 +38,7 @@ export default Ember.Mixin.create({
 		{
 			try
 			{
-				elements[0].style = Ember.get(this, '_calculatedStyle');
+				elements[0].setAttribute('style', Ember.get(this, '_calculatedStyle'));
 			}
 			catch(err)
 			{
