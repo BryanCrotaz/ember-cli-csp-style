@@ -38,11 +38,14 @@ export default Ember.Mixin.create({
 		{
 			try
 			{
-				elements[0].setAttribute('style', Ember.get(this, '_calculatedStyle'));
+				let _calculatedStyle = Ember.get(this, '_calculatedStyle');
+				requestAnimationFrame(() =>
+					elements[0].setAttribute('style', _calculatedStyle)
+				);
 			}
 			catch(err)
 			{
-				elements.attr('style', Ember.get(this, '_calculatedStyle'));
+				elements.attr('style', _calculatedStyle);
 			}
 		}
 	}),
