@@ -39,9 +39,7 @@ export default Ember.Mixin.create({
 			try
 			{
 				let _calculatedStyle = Ember.get(this, '_calculatedStyle');
-				requestAnimationFrame(() =>
-						elements[0].style = ('style', _calculatedStyle)
-				);
+				requestAnimationFrame(() => elements[0].style = _calculatedStyle);
 			}
 			catch(err)
 			{
