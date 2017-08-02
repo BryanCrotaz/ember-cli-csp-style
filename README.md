@@ -72,7 +72,7 @@ If you bind directly to style:
 ```
 styleBindings: ['style', 'width', 'display'],
 style: Ember.computed('myData', function() {...}) 
-'''
+```
 this will only output your calculated `style` and will ignore all other bindings (in this case `width` and `height`).
 
 
