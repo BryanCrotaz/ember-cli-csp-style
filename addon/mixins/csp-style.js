@@ -12,24 +12,25 @@ export default Ember.Mixin.create({
 
 	_regex: /^(([^\?:]+):)?([a-z0-9_\.-]+)(\[([a-z%]+)\])?(\?([a-z0-9_\.\-]*):([a-z0-9_\.\-]*))?$/i,
 
-	doInit: Ember.on('didInsertElement', function() {
+	didInsertElement() {
+		this._super(...arguments);
 		this._refreshBindings();
-	}),
+	},
 
-	styleBindingsChanged: Ember.observer('styleBindings', function() {
-		this._refreshBindings();
-	}),
-
-	doCleanup: Ember.on('willDestroyElement', function() {
+	willDestroyElement() {
 		var observers = Ember.get(this, '_styleObservers') || {};
 		// remove all bindings
 		for(var property in observers) {
 			if (observers.hasOwnProperty(property)) {
-				observers[property].stop();
+				observers[property].destroy();
 				delete observers[property];
 			}
 		}
-		Ember.set(this, '_styleObservers', {});
+		this._super(...arguments);
+	},
+
+	styleBindingsChanged: Ember.observer('styleBindings', function() {
+		this._refreshBindings();
 	}),
 
 	_writeStyle: Ember.observer('_calculatedStyle', function() {
@@ -91,7 +92,7 @@ export default Ember.Mixin.create({
 			if (observers.hasOwnProperty(property)) {
 				if (!foundBindings[property])
 				{
-					observers[property].stop();
+					observers[property].destroy();
 					delete observers[property];
 				}
 			}

@@ -7,27 +7,24 @@ export default Ember.Object.extend({
 	unit: null,
 	styleChunk: null,
 
-	_setup: Ember.on('init', function() {
+	init() {
+		this._super(...arguments);
 		this._startObserving();
 		this._setStyle();
-	}),
-
-	_teardown: Ember.on('willDestroy', function() {
-		this.stop();
-	}),
-
-	_startObserving: function() {
-		this.get('target').addObserver(this.get('property'), this, '_propertyDidChange');
 	},
 
-	stop: function() {
+	willDestroy() {
 		var target = this.get('target');
 		if (target)
 		{
 			target.removeObserver(this.get('property'), this, '_propertyDidChange');
-			this._removeStyle();
 			this.set('target', null);
 		}
+		this._super(...arguments);
+	},
+
+	_startObserving: function() {
+		this.get('target').addObserver(this.get('property'), this, '_propertyDidChange');
 	},
 
 	_propertyDidChange: function (/*target, property*/) {
@@ -62,9 +59,5 @@ export default Ember.Object.extend({
 	_getValue: function() {
 		var property = this.get('property');
 		return this.get('target.'+property);
-	},
-
-	_removeStyle: function() {
-		this.set('styleChunk', null);
 	}
 });
