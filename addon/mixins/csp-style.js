@@ -1,8 +1,10 @@
-import Ember from 'ember';
+import { camelize } from '@ember/string';
+import { get, observer, set } from '@ember/object';
+import Mixin from '@ember/object/mixin';
 import StyleObserver from './observers/style';
 import YesNoStyleObserver from './observers/yesno';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
 	
 	concatenatedProperties: ['styleBindings'],
 
@@ -18,7 +20,7 @@ export default Ember.Mixin.create({
 	},
 
 	willDestroyElement() {
-		var observers = Ember.get(this, '_styleObservers') || {};
+		var observers = get(this, '_styleObservers') || {};
 		// remove all bindings
 		for(var property in observers) {
 			if (observers.hasOwnProperty(property)) {
@@ -29,17 +31,17 @@ export default Ember.Mixin.create({
 		this._super(...arguments);
 	},
 
-	styleBindingsChanged: Ember.observer('styleBindings', function() {
+	styleBindingsChanged: observer('styleBindings', function() {
 		this._refreshBindings();
 	}),
 
-	_writeStyle: Ember.observer('_calculatedStyle', function() {
+	_writeStyle: observer('_calculatedStyle', function() {
 		let elements = this.$();
 		if (elements && elements.length > 0)
 		{
 			try
 			{
-				let _calculatedStyle = Ember.get(this, '_calculatedStyle');
+				let _calculatedStyle = get(this, '_calculatedStyle');
 				requestAnimationFrame(() => elements[0].style = _calculatedStyle);
 			}
 			catch(err)
@@ -51,21 +53,21 @@ export default Ember.Mixin.create({
 
 	_refreshStyle() {
 		var style = "";
-		var observers = Ember.get(this, '_styleObservers');
+		var observers = get(this, '_styleObservers');
 		for (var key in observers)
 		{
 			if (key === "style" || key.indexOf(":style?") > -1 || (key.indexOf(":style") > -1 && key.indexOf(":style") === key.length-6)) {
-				style = Ember.get(observers[key], 'styleChunk');
+				style = get(observers[key], 'styleChunk');
 				// trim off prefix and suffix
 				style = style.substring(6, style.length-1);
 				break;
 			}
 			else
 			{
-				style += Ember.get(observers[key], 'styleChunk');
+				style += get(observers[key], 'styleChunk');
 			}
 		}
-		Ember.set(this, '_calculatedStyle', style);
+		set(this, '_calculatedStyle', style);
 	},
 
 	_refreshBindings: function() {
@@ -106,7 +108,7 @@ export default Ember.Mixin.create({
 		var match = binding.match(this.get('_regex'));
 		if (match) {
 			var cssProp = match[3];
-			var emberProp = match[2] || Ember.String.camelize(cssProp);
+			var emberProp = match[2] || camelize(cssProp);
 			var unit = match[5];
 			var type = StyleObserver;
 			var properties = {

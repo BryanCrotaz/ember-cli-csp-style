@@ -1,6 +1,8 @@
+import { isHTMLSafe } from '@ember/string';
+import EmberObject from '@ember/object';
 import Ember from 'ember';
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
 	target: null,
 	property: null,
 	cssName: null,
@@ -40,7 +42,7 @@ export default Ember.Object.extend({
 			value = value + unit;
 		}
 		// escape if necessary
-		if (Ember.String.isHTMLSafe(value)) {
+		if (isHTMLSafe(value)) {
 			value = value.toString();
 		}
 		else
