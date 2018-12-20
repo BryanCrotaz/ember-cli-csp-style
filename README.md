@@ -6,9 +6,11 @@ This addon makes CSP-safe styling of your Ember component really easy.
 
 [![Build Status](https://travis-ci.org/BryanCrotaz/ember-cli-csp-style.svg?branch=master)](https://travis-ci.org/BryanCrotaz/ember-cli-csp-style)
 
-## Installation
 
-* `npm install --save ember-cli-csp-style`
+Installation
+------------------------------------------------------------------------------
+
+* `ember install ember-cli-csp-style`
 
 ## Usage
 
@@ -76,12 +78,13 @@ style: Ember.computed('myData', function() {...})
 this will only output your calculated `style` and will ignore all other bindings (in this case `width` and `height`).
 
 
-## Running Tests
+[Longer description of how to use the addon in apps.]
 
 * `ember test`
 * `ember test --server`
 
-## Building
+License
+------------------------------------------------------------------------------
 
 * `ember build`
 
@@ -93,4 +96,4 @@ For more information on using ember-cli, visit [http://www.ember-cli.com/](http:
 
 ## Legal
 
-[Licensed under the MIT license](http://www.opensource.org/licenses/mit-license.php)
+This project is licensed under the [MIT License](LICENSE.md).
