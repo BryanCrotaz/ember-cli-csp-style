@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-csp-style",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "",
   "keywords": [
     "ember-addon"
@@ -23,17 +23,18 @@
   "dependencies": {
     "ember-cli-babel": "^7.1.2",
     "ember-cli-htmlbars": "^3.0.0",
-    "ember-string-ishtmlsafe-polyfill": "^1.1.0"
+    "ember-string-ishtmlsafe-polyfill": "^2.0.2"
   },
   "devDependencies": {
     "@ember/optional-features": "^0.6.3",
     "broccoli-asset-rev": "^2.7.0",
     "ember-cli": "~3.6.0",
-    "ember-cli-content-security-policy": "0.5.0",
+    "ember-cli-content-security-policy": "^1.0.0",
     "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-htmlbars-inline-precompile": "^1.0.3",
     "ember-cli-inject-live-reload": "^1.8.2",
+    "ember-cli-release": "^1.0.0-beta.2",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-template-lint": "^1.0.0-beta.1",
     "ember-cli-uglify": "^2.1.0",
