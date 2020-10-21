@@ -39,14 +39,14 @@ export default Mixin.create({
 		let elements = this.$();
 		if (elements && elements.length > 0)
 		{
+      let calculatedStyle = this._calculatedStyle;
 			try
 			{
-				let _calculatedStyle = get(this, '_calculatedStyle');
-				requestAnimationFrame(() => elements[0].style = _calculatedStyle);
+				requestAnimationFrame(() => elements[0].style = calculatedStyle);
 			}
 			catch(err)
 			{
-				elements.attr('style', _calculatedStyle);
+				elements.attr('style', calculatedStyle);
 			}
 		}
 	}),
